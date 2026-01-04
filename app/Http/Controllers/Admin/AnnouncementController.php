@@ -17,7 +17,10 @@ class AnnouncementController extends Controller
             'priority' => 'required',
         ]);
 
-        Announcement::create($request->all());
+        $data = $request->all();
+        $data['is_active'] = $request->has('is_active');
+
+        Announcement::create($data);
 
         return redirect()->back()->with('success', 'Pengumuman berhasil ditambahkan');
     }
@@ -32,7 +35,10 @@ class AnnouncementController extends Controller
             'priority' => 'required',
         ]);
 
-        $announcement->update($request->all());
+        $data = $request->all();
+        $data['is_active'] = $request->has('is_active');
+
+        $announcement->update($data);
 
         return redirect()->back()->with('success', 'Pengumuman berhasil diperbarui');
     }

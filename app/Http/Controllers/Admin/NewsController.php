@@ -21,6 +21,7 @@ class NewsController extends Controller
 
         $data = $request->all();
         $data['slug'] = Str::slug($request->title) . '-' . time();
+        $data['is_published'] = $request->has('is_published');
 
         if ($request->hasFile('image')) {
             $data['image'] = $request->file('image')->store('news', 'public');
@@ -42,6 +43,8 @@ class NewsController extends Controller
         ]);
 
         $data = $request->all();
+        $data['is_published'] = $request->has('is_published');
+
         if ($request->title !== $news->title) {
             $data['slug'] = Str::slug($request->title) . '-' . time();
         }
