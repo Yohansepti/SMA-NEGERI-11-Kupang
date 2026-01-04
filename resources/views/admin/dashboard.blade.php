@@ -93,6 +93,36 @@
             background-color: var(--navy);
             color: white;
         }
+        /* Toggle Switch Styling */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 24px;
+        }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider { background-color: var(--primary); }
+        input:focus + .slider { box-shadow: 0 0 1px var(--primary); }
+        input:checked + .slider:before { transform: translateX(24px); }
     </style>
 </head>
 <body class="bg-[#f8f9fa] text-slate-800 antialiased overflow-x-hidden">
@@ -324,14 +354,24 @@
                                         <div class="text-[10px] font-bold text-slate-400 mt-2 tracking-widest">SLUG: {{ $item->slug }}</div>
                                     </td>
                                     <td class="px-10 py-8 uppercase text-[10px] font-black text-primary">{{ $item->category }}</td>
-                                    <td class="px-10 py-8"><span class="px-4 py-1 bg-green-100 text-green-600 text-[9px] font-black uppercase rounded-full">{{ $item->is_published ? 'Published' : 'Draft' }}</span></td>
                                     <td class="px-10 py-8">
-                                        <div class="flex gap-2">
-                                            <button @click="openEditModal('news', '{{ route('admin.news.update', $item->id) }}', {{ $item }})" class="w-8 h-8 bg-blue-500 text-white flex items-center justify-center hover:bg-navy transition-all rounded"><i class="fa fa-edit text-xs"></i></button>
-                                            <form method="POST" action="{{ route('admin.news.destroy', $item->id) }}">
+                                        <span class="px-4 py-1 {{ $item->is_published ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600' }} text-[9px] font-black uppercase rounded-full">
+                                            {{ $item->is_published ? 'Published' : 'Draft / Off' }}
+                                        </span>
+                                    </td>
+                                    <td class="px-10 py-8">
+                                        <div class="flex items-center gap-3">
+                                            <button @click="openEditModal('news', '{{ route('admin.news.update', $item->id) }}', {{ $item }})" 
+                                                    class="flex items-center gap-2 px-3 py-2 bg-blue-500 text-white text-[10px] font-black uppercase tracking-wider hover:bg-navy transition-all rounded shadow-md">
+                                                <i class="fa fa-edit"></i> Edit
+                                            </button>
+                                            <form method="POST" action="{{ route('admin.news.destroy', $item->id) }}" class="inline">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" onclick="return confirm('Yakin hapus berita ini?')" class="w-8 h-8 bg-secondary text-white flex items-center justify-center hover:bg-navy transition-all rounded"><i class="fa fa-trash text-xs"></i></button>
+                                                <button type="submit" onclick="return confirm('Yakin hapus berita ini?')" 
+                                                        class="flex items-center gap-2 px-3 py-2 bg-secondary text-white text-[10px] font-black uppercase tracking-wider hover:bg-navy transition-all rounded shadow-md">
+                                                    <i class="fa fa-trash"></i> Hapus
+                                                </button>
                                             </form>
                                         </div>
                                     </td>
@@ -373,14 +413,24 @@
                                         {{ $announcement->priority }} 
                                         @if($announcement->priority === 'Urgent')<i class="fa fa-exclamation-triangle ml-1"></i>@endif
                                     </td>
-                                    <td class="px-10 py-8"><span class="px-4 py-1 {{ $announcement->is_active ? 'bg-green-100 text-green-600' : 'bg-gray-100 text-gray-600' }} text-[9px] font-black uppercase rounded-full">{{ $announcement->is_active ? 'Aktif' : 'Nonaktif' }}</span></td>
                                     <td class="px-10 py-8">
-                                        <div class="flex gap-2">
-                                            <button @click="openEditModal('announcement', '{{ route('admin.announcements.update', $announcement->id) }}', {{ $announcement }})" class="w-8 h-8 bg-blue-500 text-white flex items-center justify-center hover:bg-navy transition-all rounded"><i class="fa fa-edit text-xs"></i></button>
-                                            <form method="POST" action="{{ route('admin.announcements.destroy', $announcement->id) }}">
+                                        <span class="px-4 py-1 {{ $announcement->is_active ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600' }} text-[9px] font-black uppercase rounded-full">
+                                            {{ $announcement->is_active ? 'Aktif / On' : 'Nonaktif / Off' }}
+                                        </span>
+                                    </td>
+                                    <td class="px-10 py-8">
+                                        <div class="flex items-center gap-3">
+                                            <button @click="openEditModal('announcement', '{{ route('admin.announcements.update', $announcement->id) }}', {{ $announcement }})" 
+                                                    class="flex items-center gap-2 px-3 py-2 bg-blue-500 text-white text-[10px] font-black uppercase tracking-wider hover:bg-navy transition-all rounded shadow-md">
+                                                <i class="fa fa-edit"></i> Edit
+                                            </button>
+                                            <form method="POST" action="{{ route('admin.announcements.destroy', $announcement->id) }}" class="inline">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" onclick="return confirm('Yakin hapus pengumuman ini?')" class="w-8 h-8 bg-secondary text-white flex items-center justify-center hover:bg-navy transition-all rounded"><i class="fa fa-trash text-xs"></i></button>
+                                                <button type="submit" onclick="return confirm('Yakin hapus pengumuman ini?')" 
+                                                        class="flex items-center gap-2 px-3 py-2 bg-secondary text-white text-[10px] font-black uppercase tracking-wider hover:bg-navy transition-all rounded shadow-md">
+                                                    <i class="fa fa-trash"></i> Hapus
+                                                </button>
                                             </form>
                                         </div>
                                     </td>
@@ -522,12 +572,18 @@
                                     <td class="px-10 py-8 uppercase text-[10px] font-black text-primary">{{ $academic->type }}</td>
                                     <td class="px-10 py-8 text-sm text-slate-600">{{ Str::limit($academic->description, 50) }}</td>
                                     <td class="px-10 py-8">
-                                        <div class="flex gap-2">
-                                            <button @click="openEditModal('academic', '{{ route('admin.academics.update', $academic->id) }}', {{ $academic }})" class="w-8 h-8 bg-blue-500 text-white flex items-center justify-center hover:bg-navy transition-all rounded"><i class="fa fa-edit text-xs"></i></button>
-                                            <form method="POST" action="{{ route('admin.academics.destroy', $academic->id) }}">
+                                         <div class="flex items-center gap-3">
+                                             <button @click="openEditModal('academic', '{{ route('admin.academics.update', $academic->id) }}', {{ $academic }})" 
+                                                     class="flex items-center gap-2 px-3 py-2 bg-blue-500 text-white text-[10px] font-black uppercase tracking-wider hover:bg-navy transition-all rounded shadow-md">
+                                                <i class="fa fa-edit"></i> Edit
+                                            </button>
+                                            <form method="POST" action="{{ route('admin.academics.destroy', $academic->id) }}" class="inline">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" onclick="return confirm('Yakin hapus data ini?')" class="w-8 h-8 bg-secondary text-white flex items-center justify-center hover:bg-navy transition-all rounded"><i class="fa fa-trash text-xs"></i></button>
+                                                <button type="submit" onclick="return confirm('Yakin hapus data ini?')" 
+                                                        class="flex items-center gap-2 px-3 py-2 bg-secondary text-white text-[10px] font-black uppercase tracking-wider hover:bg-navy transition-all rounded shadow-md">
+                                                    <i class="fa fa-trash"></i> Hapus
+                                                </button>
                                             </form>
                                         </div>
                                     </td>
@@ -581,12 +637,18 @@
                                         @endif
                                     </td>
                                     <td class="px-6 py-4">
-                                        <div class="flex gap-2">
-                                            <button @click="openEditModal('staff', '{{ route('admin.staff.update', $person->id) }}', {{ $person }})" class="w-8 h-8 bg-blue-500 text-white flex items-center justify-center hover:bg-navy transition-all rounded"><i class="fa fa-edit text-xs"></i></button>
-                                            <form method="POST" action="{{ route('admin.staff.destroy', $person->id) }}">
+                                         <div class="flex items-center gap-2">
+                                             <button @click="openEditModal('staff', '{{ route('admin.staff.update', $person->id) }}', {{ $person }})" 
+                                                     class="flex items-center gap-1.5 px-3 py-2 bg-blue-500 text-white text-[9px] font-black uppercase tracking-wider hover:bg-navy transition-all rounded shadow-md">
+                                                <i class="fa fa-edit"></i> Edit
+                                            </button>
+                                            <form method="POST" action="{{ route('admin.staff.destroy', $person->id) }}" class="inline">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" onclick="return confirm('Yakin hapus data ini?')" class="w-8 h-8 bg-secondary text-white flex items-center justify-center hover:bg-navy transition-all rounded"><i class="fa fa-trash text-xs"></i></button>
+                                                <button type="submit" onclick="return confirm('Yakin hapus data ini?')" 
+                                                        class="flex items-center gap-1.5 px-3 py-2 bg-secondary text-white text-[9px] font-black uppercase tracking-wider hover:bg-navy transition-all rounded shadow-md">
+                                                    <i class="fa fa-trash"></i> Hapus
+                                                </button>
                                             </form>
                                         </div>
                                     </td>
@@ -683,9 +745,15 @@
                     <label class="block text-[10px] font-black text-navy uppercase tracking-[0.2em] mb-3">Gambar</label>
                     <input type="file" name="image" accept="image/*" class="w-full bg-light border-0 p-4 focus:ring-2 focus:ring-primary focus:outline-none">
                 </div>
-                <div class="flex items-center gap-3">
-                    <input type="checkbox" name="is_published" value="1" :checked="formData.is_published == 1" id="is_published" class="w-5 h-5">
-                    <label for="is_published" class="text-sm font-bold text-navy">Publikasikan Berita</label>
+                <div class="bg-light p-6 rounded-lg flex items-center justify-between">
+                    <div>
+                        <div class="text-sm font-black text-navy uppercase">Status Berita</div>
+                        <div class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Aktifkan agar muncul di halaman depan</div>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" name="is_published" value="1" :checked="formData.is_published == 1">
+                        <span class="slider"></span>
+                    </label>
                 </div>
                 <div class="flex gap-4">
                     <button type="submit" class="btn-primary flex-1"><span x-text="isEdit ? 'Simpan Perubahan' : 'Simpan Berita'"></span></button>
@@ -712,9 +780,15 @@
                         <option value="Urgent">Urgent</option>
                     </select>
                 </div>
-                <div class="flex items-center gap-3">
-                    <input type="checkbox" name="is_active" value="1" :checked="formData.is_active == 1" id="is_active" class="w-5 h-5">
-                    <label for="is_active" class="text-sm font-bold text-navy">Aktifkan Pengumuman</label>
+                <div class="bg-light p-6 rounded-lg flex items-center justify-between">
+                    <div>
+                        <div class="text-sm font-black text-navy uppercase">Status Pengumuman</div>
+                        <div class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Aktifkan agar muncul di popup/pusat pengumuman</div>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" name="is_active" value="1" :checked="formData.is_active == 1">
+                        <span class="slider"></span>
+                    </label>
                 </div>
                 <div class="flex gap-4">
                     <button type="submit" class="btn-primary flex-1"><span x-text="isEdit ? 'Simpan Perubahan' : 'Simpan Pengumuman'"></span></button>
