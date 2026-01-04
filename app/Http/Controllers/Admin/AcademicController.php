@@ -30,6 +30,10 @@ class AcademicController extends Controller
             $data['image'] = $request->file('image')->store('academics', 'public');
         }
 
+        if ($request->hasFile('file')) {
+            $data['content'] = $request->file('file')->store('academics/documents', 'public');
+        }
+
         Academic::create($data);
 
         return redirect()->back()->with('success', 'Data Akademik berhasil ditambahkan');
@@ -52,6 +56,13 @@ class AcademicController extends Controller
                 Storage::disk('public')->delete($academic->image);
             }
             $data['image'] = $request->file('image')->store('academics', 'public');
+        }
+
+        if ($request->hasFile('file')) {
+            if ($academic->content && Storage::disk('public')->exists($academic->content)) {
+                Storage::disk('public')->delete($academic->content);
+            }
+            $data['content'] = $request->file('file')->store('academics/documents', 'public');
         }
 
         $academic->update($data);

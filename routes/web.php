@@ -20,7 +20,7 @@ Route::prefix('akademik')->name('akademik.')->group(function () {
 });
 
 // Lainnya
-Route::view('kurikulum', 'kurikulum')->name('kurikulum');
+Route::get('kurikulum', [PublicController::class, 'kurikulum'])->name('kurikulum');
 Route::get('berita', [App\Http\Controllers\PublicController::class, 'berita'])->name('berita');
 Route::get('pengumuman', [App\Http\Controllers\PublicController::class, 'pengumuman'])->name('pengumuman');
 Route::view('ppdb', 'ppdb')->name('ppdb');

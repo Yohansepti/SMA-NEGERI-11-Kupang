@@ -3,6 +3,7 @@
 @section('title', 'Guru & Pegawai - SMAN 11 KUPANG')
 
 @section('content')
+    <div x-data="{ showStaffModal: false, selectedStaff: {} }">
     <!-- Page Header Start -->
     <div class="container-fluid bg-navy py-16 mb-20 relative overflow-hidden">
         <div class="absolute inset-0 opacity-10">
@@ -33,16 +34,14 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
                 @foreach($staff as $person)
                 <div class="group">
-                    <div class="relative overflow-hidden mb-8 shadow-xl">
+                    <div class="relative overflow-hidden mb-8 shadow-xl cursor-pointer" @click="selectedStaff = {{ $person }}; showStaffModal = true">
                         @if($person->image)
                         <img src="{{ asset('storage/' . $person->image) }}" class="w-full h-80 object-cover grayscale group-hover:grayscale-0 transition-all duration-700 scale-110 group-hover:scale-100" alt="{{ $person->name }}">
                         @else
                         <img src="https://ui-avatars.com/api/?name={{ urlencode($person->name) }}&background=f2f2f2&color=120f2d&size=500" class="w-full h-80 object-cover grayscale group-hover:grayscale-0 transition-all duration-700 scale-110 group-hover:scale-100" alt="{{ $person->name }}">
                         @endif
-                        <div class="absolute bottom-0 left-0 right-0 p-6 bg-primary flex justify-center space-x-6 opacity-0 group-hover:opacity-100 translate-y-full group-hover:translate-y-0 transition-all duration-500">
-                            <a href="#" class="text-white hover:text-navy transition-colors text-xl"><i class="fab fa-facebook-f"></i></a>
-                            <a href="#" class="text-white hover:text-navy transition-colors text-xl"><i class="fab fa-instagram"></i></a>
-                            <a href="#" class="text-white hover:text-navy transition-colors text-xl"><i class="fab fa-linkedin-in"></i></a>
+                        <div class="absolute inset-0 bg-navy/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                            <span class="bg-primary text-white text-[10px] font-black uppercase tracking-widest px-6 py-2">Lihat Biodata</span>
                         </div>
                     </div>
                     <div class="text-center">
@@ -65,4 +64,55 @@
         </div>
     </section>
     <!-- Team Section End -->
+
+    <!-- Biodata Modal -->
+    <div x-show="showStaffModal" x-transition.opacity class="fixed inset-0 z-[999] bg-navy/90 backdrop-blur-md flex items-center justify-center p-4" x-cloak>
+        <div class="bg-white w-full max-w-4xl max-h-[90vh] overflow-y-auto relative shadow-2xl" @click.away="showStaffModal = false">
+            <button @click="showStaffModal = false" class="absolute top-6 right-6 text-navy hover:text-primary transition-colors z-20">
+                <i class="fa fa-times text-2xl"></i>
+            </button>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2">
+                <div class="bg-light p-0 lg:h-full">
+                    <img :src="selectedStaff.image ? '/storage/' + selectedStaff.image : 'https://ui-avatars.com/api/?name=' + selectedStaff.name + '&background=f2f2f2&color=120f2d&size=800'" 
+                         class="w-full h-full object-cover grayscale-0" :alt="selectedStaff.name">
+                </div>
+                <div class="p-10 lg:p-16">
+                    <div class="mb-10">
+                        <span class="text-primary text-[10px] font-black uppercase tracking-[0.3em] mb-2 block">Faculty Profile</span>
+                        <h3 class="text-3xl lg:text-4xl font-black text-navy uppercase tracking-tighter leading-none" x-text="selectedStaff.name"></h3>
+                        <p class="text-secondary font-bold uppercase tracking-widest text-xs mt-4" x-text="selectedStaff.role"></p>
+                    </div>
+
+                    <div class="space-y-6">
+                        <div class="flex items-start justify-between border-b border-light pb-4">
+                            <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">NIP</span>
+                            <span class="font-bold text-navy" x-text="selectedStaff.nip || '-'"></span>
+                        </div>
+                        <div class="flex items-start justify-between border-b border-light pb-4">
+                            <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">NUPTK</span>
+                            <span class="font-bold text-navy" x-text="selectedStaff.nuptk || '-'"></span>
+                        </div>
+                        <div class="flex items-start justify-between border-b border-light pb-4">
+                            <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Jenis Kelamin</span>
+                            <span class="font-bold text-navy" x-text="selectedStaff.gender === 'L' ? 'Laki-laki' : 'Perempuan'"></span>
+                        </div>
+                        <div class="flex items-start justify-between border-b border-light pb-4">
+                            <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">TTL</span>
+                            <span class="font-bold text-navy" x-text="(selectedStaff.birth_place || '') + ', ' + (selectedStaff.birth_date || '')"></span>
+                        </div>
+                        <div class="flex items-start justify-between border-b border-light pb-4">
+                            <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Jenis PTK</span>
+                            <span class="font-bold text-navy" x-text="selectedStaff.ptk_type || '-'"></span>
+                        </div>
+                    </div>
+
+                    <div class="mt-12">
+                        <p class="text-sm text-slate-500 italic leading-relaxed">Berkomitmen untuk membimbing generasi muda SMAN 11 Kupang menjadi pemimpin masa depan yang berintegritas dan berwawasan luas.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
 @endsection

@@ -69,22 +69,24 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                @php
-                    $docs = [
-                        ['type' => 'PDF', 'name' => 'Kalender Akademik 2024/2025', 'color' => 'red'],
-                        ['type' => 'PDF', 'name' => 'Struktur Kurikulum Merdeka', 'color' => 'blue'],
-                        ['type' => 'PDF', 'name' => 'Silabus Pembelajaran Ganjil', 'color' => 'green'],
-                    ];
-                @endphp
-
-                @foreach($docs as $doc)
-                <div class="bg-white p-12 shadow-xl hover:shadow-2xl transition-all group overflow-hidden relative">
-                    <div class="absolute top-0 right-0 w-16 h-16 bg-light flex items-center justify-center text-navy font-black text-xs uppercase -rotate-45 translate-x-6 -translate-y-6">NEW</div>
-                    <i class="fa fa-file-pdf text-5xl text-{{ $doc['color'] }}-500 mb-8 block group-hover:scale-125 transition-transform duration-500"></i>
-                    <h5 class="text-xl font-black text-navy uppercase mb-8 leading-tight">{{ $doc['name'] }}</h5>
-                    <a href="#" class="btn-edukate bg-navy text-white hover:bg-primary w-full text-center">Download Sekarang</a>
+                @forelse($kurikulum as $item)
+                <div class="bg-white p-12 shadow-xl hover:shadow-2xl transition-all group overflow-hidden relative border-b-4 border-primary">
+                    <div class="absolute top-0 right-0 w-16 h-16 bg-light flex items-center justify-center text-navy font-black text-xs uppercase -rotate-45 translate-x-6 -translate-y-6">DOC</div>
+                    <i class="fa fa-file-pdf text-5xl text-red-500 mb-8 block group-hover:scale-125 transition-transform duration-500"></i>
+                    <h5 class="text-xl font-black text-navy uppercase mb-8 leading-tight">{{ $item->title }}</h5>
+                    @if($item->content)
+                        <a href="{{ asset('storage/' . $item->content) }}" target="_blank" class="btn-edukate bg-navy text-white hover:bg-primary w-full text-center">Download Sekarang</a>
+                    @else
+                        <button disabled class="btn-edukate bg-slate-200 text-slate-400 w-full text-center cursor-not-allowed">File Belum Tersedia</button>
+                    @endif
                 </div>
-                @endforeach
+                @empty
+                <div class="col-span-full text-center py-20 bg-white shadow-xl">
+                    <i class="fa fa-folder-open text-6xl text-slate-200 mb-6 block"></i>
+                    <h4 class="text-xl font-black text-navy uppercase">Belum Ada Dokumen</h4>
+                    <p class="text-slate-400 mt-2">Administrator belum mengunggah dokumen kurikulum.</p>
+                </div>
+                @endforelse
             </div>
         </div>
     </section>

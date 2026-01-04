@@ -846,8 +846,14 @@
                     <textarea name="content" x-model="formData.content" rows="6" class="w-full bg-light border-0 p-4 focus:ring-2 focus:ring-primary focus:outline-none font-semibold text-navy"></textarea>
                 </div>
                 <div>
-                    <label class="block text-[10px] font-black text-navy uppercase tracking-[0.2em] mb-3">Gambar</label>
-                    <input type="file" name="image" accept="image/*" class="w-full bg-light border-0 p-4 focus:ring-2 focus:ring-primary focus:outline-none">
+                    <label class="block text-[10px] font-black text-navy uppercase tracking-[0.2em] mb-3">Gambar (Opsional)</label>
+                    <input type="file" name="image" accept="image/*" class="w-full bg-light border-0 p-4 focus:ring-2 focus:ring-primary focus:outline-none placeholder:text-slate-400">
+                </div>
+                <!-- Document Upload for Kurikulum -->
+                <div x-show="formData.type === 'kurikulum'" class="bg-blue-50 p-6 rounded-lg border border-blue-100">
+                    <label class="block text-[10px] font-black text-blue-600 uppercase tracking-[0.2em] mb-3">Dokumen Kurikulum (PDF/Word/Lainnya)</label>
+                    <input type="file" name="file" class="w-full bg-white border-0 p-4 focus:ring-2 focus:ring-primary focus:outline-none">
+                    <p class="text-[9px] text-blue-400 mt-2 font-bold uppercase tracking-widest">PENTING: Gunakan ini untuk Kalender Akademik atau Silabus.</p>
                 </div>
                 <div class="flex gap-4">
                     <button type="submit" class="btn-primary flex-1"><span x-text="isEdit ? 'Simpan Perubahan' : 'Simpan Data'"></span></button>

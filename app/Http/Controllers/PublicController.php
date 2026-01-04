@@ -41,6 +41,12 @@ class PublicController extends Controller
         return view('akademik.fasilitas', compact('fasilitas'));
     }
 
+    public function kurikulum()
+    {
+        $kurikulum = Academic::where('type', 'kurikulum')->get();
+        return view('kurikulum', compact('kurikulum'));
+    }
+
     public function ekskul()
     {
         $ekskul = Academic::where('type', 'ekskul')->get();
