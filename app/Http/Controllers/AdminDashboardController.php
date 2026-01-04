@@ -17,8 +17,8 @@ class AdminDashboardController extends Controller
         $kurikulum = Academic::where('type', 'kurikulum')->get();
         // $others = Academic::whereNotIn('type', ['fasilitas', 'ekskul', 'kurikulum'])->get();
 
-        $news = News::where('is_published', true)->latest()->get();
-        $announcements = Announcement::where('is_active', true)->latest()->get();
+        $news = News::latest()->get();
+        $announcements = Announcement::latest()->get();
         $staff = Staff::all();
 
         return view('admin.dashboard', compact('academics', 'fasilitas', 'ekskuls', 'kurikulum', 'news', 'announcements', 'staff'));

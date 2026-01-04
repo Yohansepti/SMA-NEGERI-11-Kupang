@@ -355,9 +355,15 @@
                                     </td>
                                     <td class="px-10 py-8 uppercase text-[10px] font-black text-primary">{{ $item->category }}</td>
                                     <td class="px-10 py-8">
-                                        <span class="px-4 py-1 {{ $item->is_published ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600' }} text-[9px] font-black uppercase rounded-full">
-                                            {{ $item->is_published ? 'Published' : 'Draft / Off' }}
-                                        </span>
+                                        @if($item->is_published)
+                                            <span class="px-4 py-1 bg-green-100 text-green-600 text-[9px] font-black uppercase rounded-full">
+                                                Aktif / Published
+                                            </span>
+                                        @else
+                                            <span class="px-4 py-1 bg-red-100 text-red-600 text-[9px] font-black uppercase rounded-full">
+                                                Nonaktif / Off
+                                            </span>
+                                        @endif
                                     </td>
                                     <td class="px-10 py-8">
                                         <div class="flex items-center gap-3">
@@ -369,7 +375,7 @@
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" onclick="return confirm('Yakin hapus berita ini?')" 
-                                                        class="flex items-center gap-2 px-3 py-2 bg-secondary text-white text-[10px] font-black uppercase tracking-wider hover:bg-navy transition-all rounded shadow-md">
+                                                        class="flex items-center gap-2 px-3 py-2 bg-red-600 text-white text-[10px] font-black uppercase tracking-wider hover:bg-navy transition-all rounded shadow-md">
                                                     <i class="fa fa-trash"></i> Hapus
                                                 </button>
                                             </form>
@@ -414,9 +420,15 @@
                                         @if($announcement->priority === 'Urgent')<i class="fa fa-exclamation-triangle ml-1"></i>@endif
                                     </td>
                                     <td class="px-10 py-8">
-                                        <span class="px-4 py-1 {{ $announcement->is_active ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600' }} text-[9px] font-black uppercase rounded-full">
-                                            {{ $announcement->is_active ? 'Aktif / On' : 'Nonaktif / Off' }}
-                                        </span>
+                                        @if($announcement->is_active)
+                                            <span class="px-4 py-1 bg-green-100 text-green-600 text-[9px] font-black uppercase rounded-full">
+                                                Aktif / On
+                                            </span>
+                                        @else
+                                            <span class="px-4 py-1 bg-red-100 text-red-600 text-[9px] font-black uppercase rounded-full">
+                                                Nonaktif / Off
+                                            </span>
+                                        @endif
                                     </td>
                                     <td class="px-10 py-8">
                                         <div class="flex items-center gap-3">
@@ -428,7 +440,7 @@
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" onclick="return confirm('Yakin hapus pengumuman ini?')" 
-                                                        class="flex items-center gap-2 px-3 py-2 bg-secondary text-white text-[10px] font-black uppercase tracking-wider hover:bg-navy transition-all rounded shadow-md">
+                                                        class="flex items-center gap-2 px-3 py-2 bg-red-600 text-white text-[10px] font-black uppercase tracking-wider hover:bg-navy transition-all rounded shadow-md">
                                                     <i class="fa fa-trash"></i> Hapus
                                                 </button>
                                             </form>
@@ -476,12 +488,18 @@
                                         @endif
                                     </td>
                                     <td class="px-10 py-8">
-                                        <div class="flex gap-2">
-                                            <button @click="openEditModal('academic', '{{ route('admin.academics.update', $item->id) }}', {{ $item }})" class="w-8 h-8 bg-blue-500 text-white flex items-center justify-center hover:bg-navy transition-all rounded"><i class="fa fa-edit text-xs"></i></button>
-                                            <form method="POST" action="{{ route('admin.academics.destroy', $item->id) }}">
+                                        <div class="flex items-center gap-3">
+                                            <button @click="openEditModal('academic', '{{ route('admin.academics.update', $item->id) }}', {{ $item }})" 
+                                                    class="flex items-center gap-2 px-3 py-2 bg-blue-500 text-white text-[10px] font-black uppercase tracking-wider hover:bg-navy transition-all rounded shadow-md">
+                                                <i class="fa fa-edit"></i> Edit
+                                            </button>
+                                            <form method="POST" action="{{ route('admin.academics.destroy', $item->id) }}" class="inline">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" onclick="return confirm('Yakin hapus data ini?')" class="w-8 h-8 bg-secondary text-white flex items-center justify-center hover:bg-navy transition-all rounded"><i class="fa fa-trash text-xs"></i></button>
+                                                <button type="submit" onclick="return confirm('Yakin hapus data ini?')" 
+                                                        class="flex items-center gap-2 px-3 py-2 bg-red-600 text-white text-[10px] font-black uppercase tracking-wider hover:bg-navy transition-all rounded shadow-md">
+                                                    <i class="fa fa-trash"></i> Hapus
+                                                </button>
                                             </form>
                                         </div>
                                     </td>
@@ -527,12 +545,18 @@
                                         @endif
                                     </td>
                                     <td class="px-10 py-8">
-                                        <div class="flex gap-2">
-                                            <button @click="openEditModal('academic', '{{ route('admin.academics.update', $item->id) }}', {{ $item }})" class="w-8 h-8 bg-blue-500 text-white flex items-center justify-center hover:bg-navy transition-all rounded"><i class="fa fa-edit text-xs"></i></button>
-                                            <form method="POST" action="{{ route('admin.academics.destroy', $item->id) }}">
+                                        <div class="flex items-center gap-3">
+                                            <button @click="openEditModal('academic', '{{ route('admin.academics.update', $item->id) }}', {{ $item }})" 
+                                                    class="flex items-center gap-2 px-3 py-2 bg-blue-500 text-white text-[10px] font-black uppercase tracking-wider hover:bg-navy transition-all rounded shadow-md">
+                                                <i class="fa fa-edit"></i> Edit
+                                            </button>
+                                            <form method="POST" action="{{ route('admin.academics.destroy', $item->id) }}" class="inline">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" onclick="return confirm('Yakin hapus data ini?')" class="w-8 h-8 bg-secondary text-white flex items-center justify-center hover:bg-navy transition-all rounded"><i class="fa fa-trash text-xs"></i></button>
+                                                <button type="submit" onclick="return confirm('Yakin hapus data ini?')" 
+                                                        class="flex items-center gap-2 px-3 py-2 bg-red-600 text-white text-[10px] font-black uppercase tracking-wider hover:bg-navy transition-all rounded shadow-md">
+                                                    <i class="fa fa-trash"></i> Hapus
+                                                </button>
                                             </form>
                                         </div>
                                     </td>
@@ -581,7 +605,7 @@
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" onclick="return confirm('Yakin hapus data ini?')" 
-                                                        class="flex items-center gap-2 px-3 py-2 bg-secondary text-white text-[10px] font-black uppercase tracking-wider hover:bg-navy transition-all rounded shadow-md">
+                                                        class="flex items-center gap-2 px-3 py-2 bg-red-600 text-white text-[10px] font-black uppercase tracking-wider hover:bg-navy transition-all rounded shadow-md">
                                                     <i class="fa fa-trash"></i> Hapus
                                                 </button>
                                             </form>
@@ -646,7 +670,7 @@
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" onclick="return confirm('Yakin hapus data ini?')" 
-                                                        class="flex items-center gap-1.5 px-3 py-2 bg-secondary text-white text-[9px] font-black uppercase tracking-wider hover:bg-navy transition-all rounded shadow-md">
+                                                        class="flex items-center gap-1.5 px-3 py-2 bg-red-600 text-white text-[9px] font-black uppercase tracking-wider hover:bg-navy transition-all rounded shadow-md">
                                                     <i class="fa fa-trash"></i> Hapus
                                                 </button>
                                             </form>
