@@ -1,0 +1,26 @@
+<?php
+
+namespace App\Http\Controllers;
+
+
+use Illuminate\Http\Request;
+use App\Models\{Academic, News, Announcement, Staff};
+
+class AdminDashboardController extends Controller
+{
+    public function index()
+    {
+        // Split academics by type
+        $academics = Academic::all(); // Keep original for total count or compatibility
+        $fasilitas = Academic::where('type', 'fasilitas')->get();
+        $ekskuls = Academic::where('type', 'ekskul')->get();
+        $kurikulum = Academic::where('type', 'kurikulum')->get();
+        // $others = Academic::whereNotIn('type', ['fasilitas', 'ekskul', 'kurikulum'])->get();
+
+        $news = News::where('is_published', true)->latest()->get();
+        $announcements = Announcement::where('is_active', true)->latest()->get();
+        $staff = Staff::all();
+
+        return view('admin.dashboard', compact('academics', 'fasilitas', 'ekskuls', 'kurikulum', 'news', 'announcements', 'staff'));
+    }
+}

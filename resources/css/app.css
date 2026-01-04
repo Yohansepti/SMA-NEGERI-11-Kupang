@@ -6,6 +6,69 @@
 @source '../**/*.js';
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-heading: 'Jost', sans-serif;
+    --font-sans: 'Open Sans', ui-sans-serif, system-ui, sans-serif;
+
+    --color-primary: #2878eb;
+    --color-secondary: #f14d5d;
+    --color-navy: #120f2d;
+    --color-text: #6b6a75;
+    --color-light: #f8f9fa;
+}
+
+/* Enable dark mode support */
+@variant dark (&:is(.dark *));
+
+@layer base {
+    body {
+        @apply antialiased text-text bg-white;
+        font-family: var(--font-sans);
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        @apply text-navy font-bold tracking-tight;
+        font-family: var(--font-heading);
+    }
+}
+
+@layer utilities {
+    .glass {
+        @apply bg-white/70 backdrop-blur-md border border-white/20;
+    }
+
+    .text-gradient {
+        @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary;
+    }
+
+    .btn-edukate {
+        @apply inline-flex items-center justify-center py-4 px-10 text-sm font-bold uppercase tracking-widest transition-all duration-300 relative overflow-hidden;
+        border-radius: 0;
+    }
+
+    .btn-edukate::before {
+        content: '';
+        @apply absolute inset-0 bg-white/10 translate-y-full transition-transform duration-300;
+    }
+
+    .btn-edukate:hover::before {
+        @apply translate-y-0;
+    }
+
+    .section-title {
+        @apply relative mb-12;
+    }
+
+    .section-title::after {
+        content: '';
+        @apply absolute -bottom-4 left-1/2 -translate-x-1/2 w-20 h-1 bg-primary;
+    }
+
+    .card-hover {
+        @apply transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl;
+    }
 }

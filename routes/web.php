@@ -1,53 +1,68 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PublicController;
 
-Route::get('/', function () {
-    return view('home');
-})->name('home');
+Route::get('/', [PublicController::class, 'home'])->name('home');
 
-// Profil
-Route::get('/profil/sejarah', function () {
-    return view('profil.sejarah');
-})->name('profil.sejarah');
+// Profil routes
+Route::prefix('profil')->name('profil.')->group(function () {
+    Route::view('sejarah', 'profil.sejarah')->name('sejarah');
+    Route::view('visi-misi', 'profil.visimisi')->name('visimisi');
+    Route::view('sambutan', 'profil.sambutan')->name('sambutan');
+    Route::get('guru-pegawai', [App\Http\Controllers\PublicController::class, 'guruPegawai'])->name('gurupegawai');
+});
 
-Route::get('/profil/visi-misi', function () {
-    return view('profil.visimisi');
-})->name('profil.visimisi');
+// Akademik routes
+Route::prefix('akademik')->name('akademik.')->group(function () {
+    Route::get('fasilitas', [App\Http\Controllers\PublicController::class, 'fasilitas'])->name('fasilitas');
+    Route::get('ekskul', [App\Http\Controllers\PublicController::class, 'ekskul'])->name('ekskul');
+});
 
-Route::get('/profil/sambutan', function () {
-    return view('profil.sambutan');
-})->name('profil.sambutan');
+// Lainnya
+Route::view('kurikulum', 'kurikulum')->name('kurikulum');
+Route::get('berita', [App\Http\Controllers\PublicController::class, 'berita'])->name('berita');
+Route::get('pengumuman', [App\Http\Controllers\PublicController::class, 'pengumuman'])->name('pengumuman');
+Route::view('ppdb', 'ppdb')->name('ppdb');
+Route::view('kontak', 'kontak')->name('kontak');
 
-Route::get('/profil/guru-pegawai', function () {
-    return view('profil.gurupegawai');
-})->name('profil.gurupegawai');
+// Admin routes
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::get('login', [App\Http\Controllers\AdminAuthController::class, 'showLoginForm'])->name('login.form');
+    Route::post('login', [App\Http\Controllers\AdminAuthController::class, 'login'])->name('login');
+    Route::post('logout', [App\Http\Controllers\AdminAuthController::class, 'logout'])->name('logout');
+    Route::middleware('auth:admin')->group(function () {
+        Route::get('dashboard', [App\Http\Controllers\AdminDashboardController::class, 'index'])->name('dashboard');
+        
+        // Change Password
+        Route::post('password/change', [App\Http\Controllers\Admin\PasswordController::class, 'change'])->name('password.change');
+        
+        // Profile Management
+        Route::post('profiles', [App\Http\Controllers\Admin\ProfileController::class, 'store'])->name('profiles.store');
+        Route::put('profiles/{id}', [App\Http\Controllers\Admin\ProfileController::class, 'update'])->name('profiles.update');
+        Route::delete('profiles/{id}', [App\Http\Controllers\Admin\ProfileController::class, 'destroy'])->name('profiles.destroy');
+        
+        // Academic Management
+        Route::post('academics', [App\Http\Controllers\Admin\AcademicController::class, 'store'])->name('academics.store');
+        Route::put('academics/{id}', [App\Http\Controllers\Admin\AcademicController::class, 'update'])->name('academics.update');
+        Route::delete('academics/{id}', [App\Http\Controllers\Admin\AcademicController::class, 'destroy'])->name('academics.destroy');
+        
+        // News Management
+        Route::post('news', [App\Http\Controllers\Admin\NewsController::class, 'store'])->name('news.store');
+        Route::put('news/{id}', [App\Http\Controllers\Admin\NewsController::class, 'update'])->name('news.update');
+        Route::delete('news/{id}', [App\Http\Controllers\Admin\NewsController::class, 'destroy'])->name('news.destroy');
+        
+        // Announcement Management
+        Route::post('announcements', [App\Http\Controllers\Admin\AnnouncementController::class, 'store'])->name('announcements.store');
+        Route::put('announcements/{id}', [App\Http\Controllers\Admin\AnnouncementController::class, 'update'])->name('announcements.update');
+        Route::delete('announcements/{id}', [App\Http\Controllers\Admin\AnnouncementController::class, 'destroy'])->name('announcements.destroy');
+        
+        // Staff Management
+        Route::post('staff', [App\Http\Controllers\Admin\StaffController::class, 'store'])->name('staff.store');
+        Route::put('staff/{id}', [App\Http\Controllers\Admin\StaffController::class, 'update'])->name('staff.update');
+        Route::delete('staff/{id}', [App\Http\Controllers\Admin\StaffController::class, 'destroy'])->name('staff.destroy');
+    });
+});
 
-// Akademik
-Route::get('/akademik/fasilitas', function () {
-    return view('akademik.fasilitas');
-})->name('akademik.fasilitas');
 
-Route::get('/akademik/ekskul', function () {
-    return view('akademik.ekskul');
-})->name('akademik.ekskul');
 
-// Kurikulum
-Route::get('/kurikulum', function () {
-    return view('kurikulum');
-})->name('kurikulum');
-
-// PPDB
-Route::get('/ppdb', function () {
-    return view('ppdb');
-})->name('ppdb');
-
-// Berita
-Route::get('/berita', function () {
-    return view('berita');
-})->name('berita');
-
-// Kontak
-Route::get('/kontak', function () {
-    return view('kontak');
-})->name('kontak');
