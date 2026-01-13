@@ -23,7 +23,7 @@ Route::prefix('akademik')->name('akademik.')->group(function () {
 Route::get('kurikulum', [PublicController::class, 'kurikulum'])->name('kurikulum');
 Route::get('berita', [App\Http\Controllers\PublicController::class, 'berita'])->name('berita');
 Route::get('pengumuman', [App\Http\Controllers\PublicController::class, 'pengumuman'])->name('pengumuman');
-Route::view('ppdb', 'ppdb')->name('ppdb');
+Route::get('ppdb', [PublicController::class, 'ppdb'])->name('ppdb');
 Route::view('kontak', 'kontak')->name('kontak');
 
 // Admin routes
@@ -61,6 +61,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('staff', [App\Http\Controllers\Admin\StaffController::class, 'store'])->name('staff.store');
         Route::put('staff/{id}', [App\Http\Controllers\Admin\StaffController::class, 'update'])->name('staff.update');
         Route::delete('staff/{id}', [App\Http\Controllers\Admin\StaffController::class, 'destroy'])->name('staff.destroy');
+
+        // PPDB Management
+        Route::post('ppdb', [App\Http\Controllers\Admin\PpdbController::class, 'store'])->name('ppdb.store');
+        Route::put('ppdb/{id}', [App\Http\Controllers\Admin\PpdbController::class, 'update'])->name('ppdb.update');
+        Route::delete('ppdb/{id}', [App\Http\Controllers\Admin\PpdbController::class, 'destroy'])->name('ppdb.destroy');
     });
 });
 

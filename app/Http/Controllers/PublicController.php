@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\{News, Announcement, Staff, Academic};
+use App\Models\{News, Announcement, Staff, Academic, Ppdb};
 
 class PublicController extends Controller
 {
@@ -51,5 +51,11 @@ class PublicController extends Controller
     {
         $ekskul = Academic::where('type', 'ekskul')->get();
         return view('akademik.ekskul', compact('ekskul'));
+    }
+
+    public function ppdb()
+    {
+        $ppdb = Ppdb::where('is_active', true)->first();
+        return view('ppdb', compact('ppdb'));
     }
 }

@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 
 use Illuminate\Http\Request;
-use App\Models\{Academic, News, Announcement, Staff};
+use App\Models\{Academic, News, Announcement, Staff, Ppdb};
 
 class AdminDashboardController extends Controller
 {
@@ -20,7 +20,8 @@ class AdminDashboardController extends Controller
         $news = News::latest()->get();
         $announcements = Announcement::latest()->get();
         $staff = Staff::all();
+        $ppdbs = Ppdb::latest()->get();
 
-        return view('admin.dashboard', compact('academics', 'fasilitas', 'ekskuls', 'kurikulum', 'news', 'announcements', 'staff'));
+        return view('admin.dashboard', compact('academics', 'fasilitas', 'ekskuls', 'kurikulum', 'news', 'announcements', 'staff', 'ppdbs'));
     }
 }

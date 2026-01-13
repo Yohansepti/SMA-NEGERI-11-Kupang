@@ -689,14 +689,72 @@
 
                 <!-- PPDB SECTION -->
                 <div x-show="section === 'ppdb'" x-cloak x-transition.opacity>
-                    <div class="bg-navy p-12 text-white shadow-2xl">
-                        <div class="flex items-center gap-10">
-                            <div class="w-24 h-24 bg-primary flex items-center justify-center text-5xl shrink-0"><i class="fa fa-id-card"></i></div>
-                            <div>
-                                <h3 class="text-4xl font-black uppercase tracking-tighter mb-4">Database <span class="text-primary italic">PPDB Online</span></h3>
-                                <p class="text-lg opacity-60 max-w-2xl leading-relaxed mb-8">Modul ini menangani seluruh data pendaftaran calon siswa baru secara real-time.</p>
-                                <button class="btn-primary">Lihat Daftar Pendaftar</button>
-                            </div>
+                    <div class="bg-white shadow-2xl overflow-hidden border border-light">
+                        <div class="p-10 border-b border-light flex justify-between items-center bg-white sticky top-0 z-10">
+                            <h3 class="text-2xl font-black text-navy uppercase tracking-tighter">Kelola <span class="text-primary italic">PPDB Online</span></h3>
+                            <button @click="openAddModal('ppdb', '{{ route('admin.ppdb.store') }}', { academic_year: '', requirements: '', schedule: [{ kegiatan: '', waktu: '', keterangan: '' }], is_active: 1 })" class="btn-primary">+ Tambah PPDB</button>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left">
+                                <thead class="bg-light/50">
+                                    <tr>
+                                        <th class="px-10 py-6 text-[10px] font-black text-navy uppercase tracking-widest">Tahun Ajaran</th>
+                                        <th class="px-10 py-6 text-[10px] font-black text-navy uppercase tracking-widest">Brosur & Panduan</th>
+                                        <th class="px-10 py-6 text-[10px] font-black text-navy uppercase tracking-widest">Status</th>
+                                        <th class="px-10 py-6 text-[10px] font-black text-navy uppercase tracking-widest">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse($ppdbs as $ppdb)
+                                    <tr class="border-b border-light hover:bg-light/50 transition-colors">
+                                        <td class="px-10 py-8">
+                                            <div class="font-black text-navy uppercase text-sm">{{ $ppdb->academic_year }}</div>
+                                        </td>
+                                        <td class="px-10 py-8">
+                                            <div class="flex flex-col gap-1">
+                                                <a href="{{ asset('storage/' . $ppdb->brochure) }}" target="_blank" class="text-[10px] font-bold text-primary uppercase hover:underline">
+                                                    <i class="fa fa-file-pdf mr-1"></i> Brosur
+                                                </a>
+                                                <a href="{{ asset('storage/' . $ppdb->guide) }}" target="_blank" class="text-[10px] font-bold text-secondary uppercase hover:underline">
+                                                    <i class="fa fa-file-alt mr-1"></i> Panduan
+                                                </a>
+                                            </div>
+                                        </td>
+                                        <td class="px-10 py-8">
+                                            @if($ppdb->is_active)
+                                                <span class="px-4 py-1 bg-green-100 text-green-600 text-[9px] font-black uppercase rounded-full">
+                                                    Aktif / Active
+                                                </span>
+                                            @else
+                                                <span class="px-4 py-1 bg-slate-100 text-slate-400 text-[9px] font-black uppercase rounded-full">
+                                                    Nonaktif
+                                                </span>
+                                            @endif
+                                        </td>
+                                        <td class="px-10 py-8">
+                                            <div class="flex items-center gap-3">
+                                                <button @click="openEditModal('ppdb', '{{ route('admin.ppdb.update', $ppdb->id) }}', {{ $ppdb }})" 
+                                                        class="flex items-center gap-2 px-3 py-2 bg-blue-500 text-white text-[10px] font-black uppercase tracking-wider hover:bg-navy transition-all rounded shadow-md">
+                                                    <i class="fa fa-edit"></i> Edit
+                                                </button>
+                                                <form method="POST" action="{{ route('admin.ppdb.destroy', $ppdb->id) }}" class="inline">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" onclick="return confirm('Yakin hapus data PPDB ini?')" 
+                                                            class="flex items-center gap-2 px-3 py-2 bg-red-600 text-white text-[10px] font-black uppercase tracking-wider hover:bg-navy transition-all rounded shadow-md">
+                                                        <i class="fa fa-trash"></i> Hapus
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    @empty
+                                    <tr>
+                                        <td colspan="4" class="px-10 py-20 text-center text-slate-400">Belum ada data PPDB.</td>
+                                    </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -904,6 +962,72 @@
                 </div>
                 <div class="flex gap-4 pt-4 border-t border-light mt-6">
                     <button type="submit" class="btn-primary flex-1"><span x-text="isEdit ? 'Simpan Perubahan' : 'Simpan Data'"></span></button>
+                    <button type="button" @click="showModal = false" class="btn-outline flex-1">Batal</button>
+                </div>
+            </form>
+
+            <!-- PPDB Form -->
+            <form x-show="modalType === 'ppdb'" method="POST" :action="formUrl" enctype="multipart/form-data" class="p-8 space-y-6">
+                @csrf
+                <input type="hidden" name="_method" value="PUT" x-bind:disabled="!isEdit">
+                <div>
+                    <label class="block text-[10px] font-black text-navy uppercase tracking-[0.2em] mb-3">Tahun Ajaran <span class="text-red-500">*</span></label>
+                    <input type="text" name="academic_year" x-model="formData.academic_year" required class="w-full bg-light border-0 p-4 focus:ring-2 focus:ring-primary focus:outline-none font-semibold text-navy" placeholder="Contoh: 2025/2026">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-black text-navy uppercase tracking-[0.2em] mb-3">Persyaratan (HTML/Text) <span class="text-red-500">*</span></label>
+                    <textarea name="requirements" x-model="formData.requirements" rows="6" required class="w-full bg-light border-0 p-4 focus:ring-2 focus:ring-primary focus:outline-none font-semibold text-navy" placeholder="Gunakan format list atau HTML"></textarea>
+                </div>
+                <div class="space-y-4 border-t border-light pt-6">
+                    <div class="flex justify-between items-center">
+                        <label class="block text-[10px] font-black text-navy uppercase tracking-[0.2em]">Jadwal Pelaksanaan <span class="text-red-500">*</span></label>
+                        <button type="button" @click="formData.schedule.push({ kegiatan: '', waktu: '', keterangan: '' })" class="text-[10px] font-black text-primary uppercase hover:underline">+ Tambah Kegiatan</button>
+                    </div>
+                    
+                    <template x-for="(item, index) in formData.schedule" :key="index">
+                        <div class="bg-light p-6 rounded-lg space-y-4 relative group">
+                            <button type="button" @click="formData.schedule.splice(index, 1)" x-show="formData.schedule.length > 1" class="absolute top-2 right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                <i class="fas fa-times text-[10px]"></i>
+                            </button>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2">Nama Kegiatan</label>
+                                    <input type="text" :name="`schedule[${index}][kegiatan]`" x-model="item.kegiatan" required class="w-full bg-white border-0 p-3 text-xs font-bold text-navy focus:ring-1 focus:ring-primary">
+                                </div>
+                                <div>
+                                    <label class="block text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2">Waktu/Tanggal</label>
+                                    <input type="text" :name="`schedule[${index}][waktu]`" x-model="item.waktu" required class="w-full bg-white border-0 p-3 text-xs font-bold text-navy focus:ring-1 focus:ring-primary" placeholder="Contoh: 12 Januari 2026">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2">Keterangan Kegiatan</label>
+                                <textarea :name="`schedule[${index}][keterangan]`" x-model="item.keterangan" required rows="2" class="w-full bg-white border-0 p-3 text-xs font-bold text-navy focus:ring-1 focus:ring-primary"></textarea>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-[10px] font-black text-navy uppercase tracking-[0.2em] mb-3">Upload Brosur <span class="text-red-500" x-show="!isEdit">*</span></label>
+                        <input type="file" name="brochure" :required="!isEdit" class="w-full bg-light border-0 p-4 focus:ring-2 focus:ring-primary focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-black text-navy uppercase tracking-[0.2em] mb-3">Upload Panduan <span class="text-red-500" x-show="!isEdit">*</span></label>
+                        <input type="file" name="guide" :required="!isEdit" class="w-full bg-light border-0 p-4 focus:ring-2 focus:ring-primary focus:outline-none">
+                    </div>
+                </div>
+                <div class="bg-light p-6 rounded-lg flex items-center justify-between">
+                    <div>
+                        <div class="text-sm font-black text-navy uppercase">Status Aktif</div>
+                        <div class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Aktifkan agar muncul di website (hanya satu yang aktif)</div>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" name="is_active" value="1" :checked="formData.is_active == 1">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="flex gap-4">
+                    <button type="submit" class="btn-primary flex-1"><span x-text="isEdit ? 'Simpan Perubahan' : 'Simpan PPDB'"></span></button>
                     <button type="button" @click="showModal = false" class="btn-outline flex-1">Batal</button>
                 </div>
             </form>
